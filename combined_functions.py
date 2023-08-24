@@ -19,7 +19,7 @@ import functions as func
     function and then works on the output (cutting out the chain-of-thought elements usually)  
     so it can be printed out to the user
     
-    So if user chooses 'Rebalance' option in the terminal app, {rebalance} function is invoked, 
+    So if user chooses 'Rebalance' option in the terminal app, {rebalance} function is called, 
     it sends infomation to {rebalance_func} that uses {rebalance_prompt} in order to instruct 
     ChatGTP how to modify the description of the world. {rebalance_func} sends ai response back to 
     {rebalance} which cuts it, prints it and returns it to the main app'''
@@ -242,6 +242,10 @@ def decliche(the_world):
 
 
 # FAR OUT WORLD
+# This function uses aggresive decliching alongside aggresive inject random 
+# The effect is a totally changed description, often diametrically opposite 
+# to the original vision. 
+
 far_out_world_prompt = '''You will receive an information about an imagined world 
 that is to be used in a tabletop roleplaying. This world be be cliched and unoriginal.
 You will list the cliches and stereotypes that are present and try to adjust the description of the world in order 
@@ -282,6 +286,11 @@ def far_out_world(the_world):
 
 
 # DEFLUFF
+# This aims to shorten the world description without collapsing it into 
+# a two sentence summarization. The Chat does not actually follow the prompt
+# in a precise manner but it usually outputs what it should (I tested many,
+# many versions of it and most of them were even more defective).  
+
 defluff_prompt = '''You will receive a text concerning an imagined world 
 that is to be used in a tabletop roleplaying. You will calculate how many tokens the world description contains. 
 You will divide the lenght in words by two and output a version of the text that has at least as many words as the result of the division.
@@ -305,12 +314,22 @@ def defluff_func(the_world):
 def defluff(the_world):
     defluffed_world = defluff_func(the_world).choices[0].message.content
     defluffed_world = defluffed_world.split('Action: ')[1]
+    
+    # an ugly fix for a recurring problem of ai spitting out parts of the
+    # system prompt in the response 
+    if 'tokens.' in defluffed_world:
+        defluffed_world = defluffed_world.split('tokens.')[1]
+    elif 'tokens' in defluffed_world:
+        defluffed_world = defluffed_world.split('tokens')[1]
+        
     console.print(Padding('Defluffed description:\n' + defluffed_world, {2, 3}))
     return defluffed_world
     
 
 
 # DARKEN WORLD
+# This makes the world grimdark.
+
 darkened_world_prompt = '''You will receive an information about an imagined world 
 that is to be used in a tabletop roleplaying. This world will probably lack some elements conductive of conflict, 
 and some of the darker themes present in fiction will not be adressed.
@@ -338,6 +357,7 @@ def darken_world(the_world):
 
 
 # LIGHTEN WORLD
+# This makes the word less grimdark.
 
 lightened_world_prompt = '''You will receive an information about an imagined world 
 that is to be used in a tabletop roleplaying. This world will probably be grim, dark and devoid of hope.
@@ -362,13 +382,4 @@ def lighten_world(the_world):
     lighter_world = lighter_world.split('Action:')[1]
     console.print(Padding('The lighter version:\n' + lighter_world, {2, 3}))
     return lighter_world
-
-
-
-#TODO: jakiś napisa processing gdy processing
-
-#TODO: Nadal jest problem z shorten wyrzucającym 114 tokens etc i trochę za bardzo skraca chyba
-# ostatecznie
-
-# TODO: git dependencies
 

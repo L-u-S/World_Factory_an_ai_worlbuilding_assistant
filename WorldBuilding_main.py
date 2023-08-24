@@ -1,5 +1,6 @@
 import openai
 import json
+import os
 
 from rich import print
 from rich.console import Console
@@ -44,8 +45,7 @@ input_sum = func.add_inputs('Write your ideas below! If you want to skip to the 
 
 if input_sum[0] != "skip":
     the_world = c_f.worldbuilding(input_sum)
-    memory.append(the_world)
-
+    
 
 # Main Loop
 # Let's you select one of the worldbuilding options, then calls a 
