@@ -13,7 +13,16 @@ from config import Config
 import functions as func
 
 
-'''This file contains all the functions that send player commands, inputs etc to ChatGTP'''
+'''This file contains all the functions that send user commands, inputs etc to ChatGTP.
+    Most functions have three elements: chat prompt, function that sends the 
+    commands to ai and a function that is called from the main app, sends info to the ai-facing 
+    function and then works on the output (cutting out the chain-of-thought elements usually)  
+    so it can be printed out to the user
+    
+    So if user chooses 'Rebalance' option in the terminal app, {rebalance} function is invoked, 
+    it sends infomation to {rebalance_func} that uses {rebalance_prompt} in order to instruct 
+    ChatGTP how to modify the description of the world. {rebalance_func} sends ai response back to 
+    {rebalance} which cuts it, prints it and returns it to the main app'''
 
 
 
@@ -22,7 +31,12 @@ cnf = Config()
 console = Console(width=100)
 red_style = Style(color="red", bold=True)
 
+
+
 # WORLDBUILDING
+# This is the main function, it creates the outline of the world.
+# it does not use chain-of-thought so the output can be printed out as is.
+
 worldbuilding_prompt = '''You are to outline information about a world that will be used in a tabletop roleplaying game.
 Several users will provide information about the world they will want to play in. 
 You are to generate an idea for a world. Following those rules:
@@ -49,6 +63,9 @@ def worldbuilding(input_sum):
 
 
 # GENERATE CONTENT
+# This function creates chapters. Chapters are kept separately from the description of the world
+# and are not mutated alongside it.
+
 generate_content_prompt = '''You will receive an information about an imagined world 
 that is to be used in a tabletop roleplaying game and an input by a player who wants more information about some element of the world.
 
@@ -76,6 +93,10 @@ def generate_content(the_world, chapter_input):
 
 
 # REBALANCE
+# This function reinjects original ideas of the user into a mutated world.
+# Its aim is to keep the changes introduced during the mutation process while also making the
+# world more in-line with the original vision.
+
 rebalance_prompt = '''You will receive description of an imagined worlds that is to be used in tabletop roleplaying.
 You will also receive players input with information about the world they will want to play in.   
 
@@ -103,6 +124,13 @@ def rebalance(the_world, input_sum):
 
 
 # INJECT RANDOM
+# This injects random words. It uses https://random-word-api as a source of the words.
+# The output text must be split several times as it contains definitions of the words,
+# and suggestions for their substitutions if they sound too strange. Definitions and substitions
+# are also returned to the main app and saved.
+# There are two prompts here: regular and aggressive. Aggressive prompt "allows" the ai to
+# change the nature of teh world more dramatically while injecting the words.
+
 inject_random_prompt = '''You will receive an information about an imagined world 
 that is to be used in a tabletop roleplaying. You will also receive a list of random concepts. 
 You will try to enrich the description of the world by utilizing the random concepts you received.
@@ -157,6 +185,9 @@ def inject_random(the_world):
 
 
 # INJECT NON-RANDOM
+# This function uses the inject_random_func and prompts, but the words injected are defined by
+# the user instead of downloaded.
+
 def inject_non_random(the_world, concept_sum):
     concept_sum = ', '.join(concept_sum)
     non_random_injected_world = inject_random_func(the_world, concept_sum).choices[0].message.content

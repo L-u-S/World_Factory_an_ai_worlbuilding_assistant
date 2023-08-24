@@ -6,9 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="84b7f832-5a22-427e-8d3a-b15e9e4955d6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WorldBuilding_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/WorldBuilding_main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/combined_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/combined_functions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/loose_prompts.py" beforeDir="false" afterPath="$PROJECT_DIR$/loose_prompts.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
