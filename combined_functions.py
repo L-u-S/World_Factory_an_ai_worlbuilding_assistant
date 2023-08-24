@@ -1,15 +1,26 @@
 import openai
-import requests
-import json
-import os
+
 from rich import print
 from rich.console import Console
-console = Console(width=50)
+from rich.markdown import Markdown
+from rich.prompt import Prompt
+from rich.prompt import IntPrompt
+from rich.prompt import Confirm
+from rich.padding import Padding
+from rich.style import Style
 
 from config import Config
+import functions as func
 
-# VARIABLES
+
+'''This file contains all the functions that send player commands, inputs etc to ChatGTP'''
+
+
+
+# SETUP
 cnf = Config()
+console = Console(width=100)
+red_style = Style(color="red", bold=True)
 
 # WORLDBUILDING
 worldbuilding_prompt = '''You are to outline information about a world that will be used in a tabletop roleplaying game.
@@ -24,6 +35,7 @@ You are to generate an idea for a world. Following those rules:
 def worldbuilding_func(input_sum):
     messages = [{"role": "system", "content" : worldbuilding_prompt},
                 {"role": "user", "content": '\n'.join(input_sum)}]
+    console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
     response = openai.ChatCompletion.create(
         model=cnf.chat_models[cnf.model],
         messages=messages,
@@ -32,7 +44,7 @@ def worldbuilding_func(input_sum):
 
 def worldbuilding(input_sum):
     the_world = worldbuilding_func(input_sum).choices[0].message.content
-    print('\n\n\nThe first version:\n' + the_world + '\n------------------------')
+    console.print(Padding('Primary world description:\n' + the_world, {2, 3}))
     return the_world
 
 
@@ -49,6 +61,7 @@ def generate_content_func(the_world, chapter_input):
     messages = [{"role": "system", "content" : generate_content_prompt},
                 {"role": "user", "content": the_world},
                 {"role": "user", "content": chapter_input}]
+    console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
     response = openai.ChatCompletion.create(
         model=cnf.chat_models[cnf.model],
         messages=messages,
@@ -58,7 +71,7 @@ def generate_content_func(the_world, chapter_input):
 def generate_content(the_world, chapter_input):
     new_content = generate_content_func(the_world, chapter_input).choices[0].message.content
     new_content = new_content.split('Action:')[1]
-    print('\n\n\nThe new content:\n' + new_content + '\n------------------------')
+    console.print(Padding('The new content:\n' + new_content, {2, 3}))
     return new_content
 
 
@@ -75,6 +88,7 @@ def rebalance_func(the_world, input_sum):
     messages = [{"role": "system", "content" : rebalance_prompt},
                 {"role": "user", "content": the_world},
                 {"role": "user", "content": '\n'.join(input_sum)}]
+    console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
     response = openai.ChatCompletion.create(
         model=cnf.chat_models[cnf.model],
         messages=messages,
@@ -84,7 +98,7 @@ def rebalance_func(the_world, input_sum):
 def rebalance(the_world, input_sum):
     rebalanced = rebalance_func(the_world, input_sum).choices[0].message.content
     rebalanced = rebalanced.split('Action:')[1]
-    print('\n\n\nThe new content:\n' + rebalanced + '\n------------------------')
+    console.print(Padding('The new content:\n' + rebalanced, {2, 3}))
     return rebalanced
 
 
@@ -121,6 +135,7 @@ def inject_random_func(the_world, randomness):
     messages = [{"role": "system", "content" : custom_prompt},
                 {"role": "user", "content": randomness},
                 {"role": "user", "content": the_world}]
+    console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
     response = openai.ChatCompletion.create(
         model=cnf.chat_models[cnf.model],
         messages=messages,
@@ -128,18 +143,16 @@ def inject_random_func(the_world, randomness):
     return response     
 
 def inject_random(the_world):
-    random_level = input(f"\nHow many random concepts should I inject?\n")
-    if random_level.isnumeric() != True:
-        print("\nI'm sorry but I need a number here.\n")
-        inject_random(the_world)
-    randomness = random_words(random_level)
+    console.print(Padding('How many random concepts should I inject?', {2, 3}))
+    random_level = IntPrompt.ask()
+    randomness = func.random_words(random_level)
     random_injected_world = inject_random_func(the_world, randomness).choices[0].message.content
     definitions = random_injected_world.split('Thought:')[0]
-    print('\n\n\nThe modified version:\n' + 'First some definitions that may be needed to understand it all:\n' + definitions)
+    console.print(Padding('The modified version:\n' + 'First some definitions that may be needed to understand it all:' + definitions, {1, 3}))
     random_injected_world_ideas = random_injected_world.split('Writing:')[1].split('Second thought:')[0]
-    print(random_injected_world_ideas)
+    console.print(Padding(random_injected_world_ideas, {1, 3}))
     substitutions = random_injected_world.split('Action:')[1]
-    print('You might consider to:' + substitutions + '\n------------------------')
+    console.print(Padding('You might consider to:\n' + substitutions, {1, 3}))
     return definitions, random_injected_world_ideas, substitutions 
 
 
@@ -148,7 +161,7 @@ def inject_non_random(the_world, concept_sum):
     concept_sum = ', '.join(concept_sum)
     non_random_injected_world = inject_random_func(the_world, concept_sum).choices[0].message.content
     non_random_injected_world = non_random_injected_world.split('Writing:')[1].split('Second thought:')[0]
-    print(non_random_injected_world)
+    console.print(Padding('Modified version:\n' + non_random_injected_world, {2, 3}))
     return non_random_injected_world
 
 
@@ -183,6 +196,7 @@ def decliche_func(the_world):
         custom_prompt = decliche_prompt
     messages = [{"role": "system", "content" : custom_prompt},
                 {"role": "user", "content": the_world}]
+    console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
     response = openai.ChatCompletion.create(
         model=cnf.chat_models[cnf.model],
         messages=messages,
@@ -192,7 +206,7 @@ def decliche_func(the_world):
 def decliche(the_world):
     decliched_world = decliche_func(the_world).choices[0].message.content
     decliched_world = decliched_world.split('Action:')[1]
-    print('\n\n\nDecliched content:\n' + decliched_world + '\n------------------------')
+    console.print(Padding('Decliched content:\n' + decliched_world, {2, 3}))
     return decliched_world
 
 
@@ -215,6 +229,7 @@ def far_out_world_func(the_world, randomness):
     messages = [{"role": "system", "content" : far_out_world_prompt},
                 {"role": "user", "content": randomness},
                 {"role": "user", "content": the_world}]
+    console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
     response = openai.ChatCompletion.create(
         model=cnf.chat_models[cnf.model],
         messages=messages,
@@ -222,18 +237,16 @@ def far_out_world_func(the_world, randomness):
     return response     
 
 def far_out_world(the_world):
-    random_level = input(f"\nHow many random ideas should I inject?\n")
-    if random_level.isnumeric() != True:
-        print("\nI'm sorry but I need a number here.\n")
-        far_out_world(the_world)
-    randomness = random_words(random_level)
+    console.print(Padding('How many random concepts should I inject?', {2, 3}))
+    random_level = IntPrompt.ask()
+    randomness = func.random_words(random_level)
     odder_world = far_out_world_func(the_world, randomness).choices[0].message.content
     definitions = odder_world.split('Definitions:')[1].split('Thought:')[0]
-    print('\n\n\nThe odder version:\n' + 'First some definitions that may be needed to understand it all:\n' + definitions)
+    console.print(Padding('The odder version:\n' + 'First some definitions that may be needed to understand it all:\n' + definitions, {1, 3}))
     odder_world_ideas = odder_world.split('Writing:')[1].split('Second thought:')[0]
-    print(odder_world_ideas)
+    console.print(Padding(odder_world_ideas, {1, 3}))
     substitutions = odder_world.split('Action:')[1]
-    print('You might consider to:' + substitutions + '\n------------------------')
+    console.print(Padding('You might consider to:' + substitutions, {1, 3}))
     return definitions, odder_world_ideas, substitutions
 
 
@@ -251,6 +264,7 @@ Action: output a shirtened world description using at least as many tokens as th
 def defluff_func(the_world):
     messages = [{"role": "system", "content" : defluff_prompt},
                 {"role": "user", "content": the_world}]
+    console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
     response = openai.ChatCompletion.create(
         model=cnf.chat_models[cnf.model],
         messages=messages,
@@ -260,7 +274,7 @@ def defluff_func(the_world):
 def defluff(the_world):
     defluffed_world = defluff_func(the_world).choices[0].message.content
     defluffed_world = defluffed_world.split('Action: ')[1]
-    print('\n\n\nDefluffed description:\n' + defluffed_world)
+    console.print(Padding('Defluffed description:\n' + defluffed_world, {2, 3}))
     return defluffed_world
     
 
@@ -278,6 +292,7 @@ Action: rewrite the description in a way that will be significantly more dangero
 def darken_world_func(the_world):
     messages = [{"role": "system", "content" : darkened_world_prompt},
                 {"role": "user", "content": the_world}]
+    console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
     response = openai.ChatCompletion.create(
         model=cnf.chat_models[cnf.model],
         messages=messages,
@@ -287,7 +302,7 @@ def darken_world_func(the_world):
 def darken_world(the_world):
     darker_world = darken_world_func(the_world).choices[0].message.content
     darker_world = darker_world.split('Action:')[1]
-    print('\n\n\nThe darker version:\n' + darker_world + '\n------------------------')
+    console.print(Padding('The darker version:\n' + darker_world, {2, 3}))
     return darker_world
 
 
@@ -304,6 +319,7 @@ Action: rewrite the description in a way that will be significantly more light-h
 def lighten_world_func(the_world):
     messages = [{"role": "system", "content" : lightened_world_prompt},
                 {"role": "user", "content": the_world}]
+    console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
     response = openai.ChatCompletion.create(
         model=cnf.chat_models[cnf.model],
         messages=messages,
@@ -313,131 +329,12 @@ def lighten_world_func(the_world):
 def lighten_world(the_world):
     lighter_world = lighten_world_func(the_world).choices[0].message.content
     lighter_world = lighter_world.split('Action:')[1]
-    print('\n\n\nThe lighter version:\n' + lighter_world + '\n------------------------')
+    console.print(Padding('The lighter version:\n' + lighter_world, {2, 3}))
     return lighter_world
 
 
-# FUNCTIONS
-def add_input(text):
-    added_input = input(f'''\n{text}\n''') 
-    return added_input
 
-
-def add_inputs(text):
-    inputs = []
-    print(f'''\n{text} If that's all, just write: "ok":\n''')
-    while True:
-        idea_input = input()
-        if idea_input.lower() == "ok":
-             break
-        elif idea_input.lower() == "skip":
-            return ["skip"]
-        else:            
-            inputs.append(idea_input)
-    return inputs
-
-
-def random_words(number):
-    random = requests.get(f'https://random-word-api.herokuapp.com/word?number={number}')
-    return ', '.join(json.loads(random.text))
-
-
-def printout(the_world, chapters, definitions, substitutions):
-    try:
-        print('\n\n' + the_world + '\n------------------------')
-    except: 
-        pass
-    
-    try:
-        for key, value in chapters.items():
-            print(f'\n\n {key.upper()} \n\n {value}')
-    except:
-        pass
-    
-    try:
-        print(f'\n\n {definitions} \n\n {substitutions}')
-    except:
-        pass    
-
-
-def rollback(memory):
-    world_number = input('\n\nHow far should I roll back?\n')
-    if world_number.isnumeric() != True:
-        print("\nI'm sorry but I need a number here.\n")
-        rollback(memory)
-    world_number = -(int(world_number))
-    try:
-        print('\n\n' + memory[world_number] + '\n------------------------')
-        if input('\nDo you want to make this world the primary one, yes/no?\n').lower() == "yes":
-            return (True, memory[world_number])
-        else:
-            return (False)
-    except:
-        print('\n\nSorry, no such world! Try again.\n')
-        return (False)
-
-
-def extract_data():
-    file_number = input('What number does the file have (e.g. my_world_3.txt is number 3)?')
-    if file_number.isnumeric() != True:
-        print("\nI'm sorry but I need a number here.\n")
-        extract_data()
-    app_path = os.getcwd()
-    file_path = f"{app_path}\saved worlds\my_world_{file_number}.txt"
-    if os.path.exists(file_path):
-        with open(file_path, 'r') as file:
-            saved_data = file.read()
-            the_world = saved_data.split('------------------------')[0]
-            chapters = saved_data.split('CHAPTERS: ')[1].split('------------------------')[0]
-            definitions = saved_data.split('DEFINITIONS: ')[1].split('------------------------')[0]
-            substitutions = saved_data.split('SUBSTITUTIONS: ')[1].split('------------------------')[0]
-            memory = saved_data.split('MEMORY: ')[1].split('------------------------')[0]
-            input_sum = saved_data.split('INPUT SUM: ')[1].split('------------------------')[0]
-            return the_world[8:], chapters, definitions, substitutions, memory, input_sum
-
-
-
-def save_to_file(the_world, chapters, definitions, substitutions, memory, input_sum):
-    memory_string = '\n'.join(memory)
-    saving_world = f'''WORLD: {the_world}\n------------------------\n\
-                       CHAPTERS: {json.dumps(chapters)}\n------------------------\n\
-                       DEFINITIONS: {definitions}\n------------------------\n\
-                       SUBSTITUTIONS: {substitutions}\n------------------------\n\
-                       MEMORY: {json.dumps(memory)}\n------------------------\n\
-                       INPUT SUM: {json.dumps(input_sum)}'''
-    app_path = os.getcwd()
-    subdir_path = os.path.join(app_path, "saved worlds")
-    if not os.path.exists(subdir_path):
-        os.makedirs(subdir_path)
-    x = 1
-    file_path = os.path.join(subdir_path, f"my_world_{x}.txt")
-    while os.path.exists(file_path):
-        x += 1
-        file_path = os.path.join(subdir_path, f"my_world_{x}.txt")
-    with open(file_path, "w") as f:
-        f.write(saving_world)
-    print(f"\n\nSaved as: {file_path}\n")
-
-def get_aikey():
-    app_path = os.getcwd()
-    file_path = f"{app_path}/aikey.txt"
-    if os.path.exists(file_path):
-        with open(file_path, 'r') as file:
-            aikey = str(file.read())
-            return aikey
-    else:
-        aikey = input("\n\nI'm sorry but I can't find the openai api key. Please provide it\
-                      either by placing it in config.openai_key or in aikey.txt file.\n\n")
-
-# NOT USED
-def split_description(description, split_word, index):
-    try:
-        output = description.split(split_word)[index]
-        return output
-    except:
-        print("\n\n Something went wrong! Returning whole content. If it's bad don't save it!\n")
-        return description
-
+#TODO: jakiś napisa processing gdy processing
 
 #TODO: Nadal jest problem z shorten wyrzucającym 114 tokens etc i trochę za bardzo skraca chyba
 # ostatecznie
