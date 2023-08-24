@@ -9,6 +9,7 @@ from rich.prompt import Confirm
 from rich.padding import Padding
 from rich.style import Style
 
+
 from config import Config
 import functions as func
 
@@ -27,7 +28,7 @@ import functions as func
 
 
 # SETUP
-cnf = Config()
+conf = Config()
 console = Console(width=100)
 red_style = Style(color="red", bold=True)
 
@@ -51,7 +52,7 @@ def worldbuilding_func(input_sum):
                 {"role": "user", "content": '\n'.join(input_sum)}]
     console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
     response = openai.ChatCompletion.create(
-        model=cnf.chat_models[cnf.model],
+        model=conf.chat_models[conf.model],
         messages=messages,
         temperature = 1)
     return response 
@@ -80,7 +81,7 @@ def generate_content_func(the_world, chapter_input):
                 {"role": "user", "content": chapter_input}]
     console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
     response = openai.ChatCompletion.create(
-        model=cnf.chat_models[cnf.model],
+        model=conf.chat_models[conf.model],
         messages=messages,
         temperature = 1)
     return response 
@@ -111,7 +112,7 @@ def rebalance_func(the_world, input_sum):
                 {"role": "user", "content": '\n'.join(input_sum)}]
     console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
     response = openai.ChatCompletion.create(
-        model=cnf.chat_models[cnf.model],
+        model=conf.chat_models[conf.model],
         messages=messages,
         temperature = 1)
     return response         
@@ -156,7 +157,7 @@ Action: provide suggestions what words might be substituted for the random words
 '''
 
 def inject_random_func(the_world, randomness):
-    if input('\nShould we use aggresive injecting (more likely to change the natury of the world instead of just the description) yes or no?\n').lower() == "yes":
+    if Confirm.ask('\nShould we use aggresive injecting (more likely to change the natury of the world instead of just the description)?\n') == True:
         custom_prompt = aggressive_inject_random_prompt
     else:
         custom_prompt = inject_random_prompt
@@ -165,7 +166,7 @@ def inject_random_func(the_world, randomness):
                 {"role": "user", "content": the_world}]
     console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
     response = openai.ChatCompletion.create(
-        model=cnf.chat_models[cnf.model],
+        model=conf.chat_models[conf.model],
         messages=messages,
         temperature = 1)
     return response     
@@ -176,11 +177,11 @@ def inject_random(the_world):
     randomness = func.random_words(random_level)
     random_injected_world = inject_random_func(the_world, randomness).choices[0].message.content
     definitions = random_injected_world.split('Thought:')[0]
-    console.print(Padding('The modified version:\n' + 'First some definitions that may be needed to understand it all:' + definitions, {1, 3}))
+    console.print(Padding('The modified version:\n' + 'First some definitions that may be needed to understand it all:\n' + definitions, {1, 3}), style=conf.txt_style)
     random_injected_world_ideas = random_injected_world.split('Writing:')[1].split('Second thought:')[0]
     console.print(Padding(random_injected_world_ideas, {1, 3}))
     substitutions = random_injected_world.split('Action:')[1]
-    console.print(Padding('You might consider to:\n' + substitutions, {1, 3}))
+    console.print(Padding('You might consider to:\n' + substitutions, {1, 3}), style=conf.txt_style)
     return definitions, random_injected_world_ideas, substitutions 
 
 
@@ -220,8 +221,8 @@ Action: write a new description of the world, it should be at least as long as t
 '''
 
 def decliche_func(the_world):
-    if input('\nShould we use aggresive decliching (more likely to make the world dramatically \
-                different and rather strange) yes/no?\n').lower() == "yes":
+    if Confirm.ask('\nShould we use aggresive decliching (more likely to make the world dramatically \
+                different and rather strange)?') == True:
         custom_prompt = aggressive_decliche_prompt
     else:
         custom_prompt = decliche_prompt
@@ -229,7 +230,7 @@ def decliche_func(the_world):
                 {"role": "user", "content": the_world}]
     console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
     response = openai.ChatCompletion.create(
-        model=cnf.chat_models[cnf.model],
+        model=conf.chat_models[conf.model],
         messages=messages,
         temperature = 1)
     return response         
@@ -266,7 +267,7 @@ def far_out_world_func(the_world, randomness):
                 {"role": "user", "content": the_world}]
     console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
     response = openai.ChatCompletion.create(
-        model=cnf.chat_models[cnf.model],
+        model=conf.chat_models[conf.model],
         messages=messages,
         temperature = 1)
     return response     
@@ -306,7 +307,7 @@ def defluff_func(the_world):
                 {"role": "user", "content": the_world}]
     console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
     response = openai.ChatCompletion.create(
-        model=cnf.chat_models[cnf.model],
+        model=conf.chat_models[conf.model],
         messages=messages,
         temperature = 1)
     return response         
@@ -344,7 +345,7 @@ def darken_world_func(the_world):
                 {"role": "user", "content": the_world}]
     console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
     response = openai.ChatCompletion.create(
-        model=cnf.chat_models[cnf.model],
+        model=conf.chat_models[conf.model],
         messages=messages,
         temperature = 1)
     return response         
@@ -372,7 +373,7 @@ def lighten_world_func(the_world):
                 {"role": "user", "content": the_world}]
     console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
     response = openai.ChatCompletion.create(
-        model=cnf.chat_models[cnf.model],
+        model=conf.chat_models[conf.model],
         messages=messages,
         temperature = 1)
     return response         

@@ -9,6 +9,8 @@ from rich.prompt import Prompt
 from rich.prompt import IntPrompt
 from rich.prompt import Confirm
 from rich.padding import Padding
+from rich.style import Style
+
 
 import combined_functions as c_f
 from config import Config
@@ -18,15 +20,23 @@ import functions as func
 
 
 # SETUP
-cfg = Config()
+conf = Config()
 console = Console(width=100)
 
+# UI SETUP
+if conf.black_on_white_style == True:
+    os.system('color f0')
+    b_o_w = Style(color="black", bgcolor="bright_white")
+    conf.txt_style = b_o_w
 
-# Gets openai api key from config or from file openai_key.txt
-if cfg.openai_key == '':
-    openai.api_key = func.get_aikey()
+
+# Gets openai api key from config, envirnoment or file (aikey.txt)
+if conf.openai_key != '':
+    openai.api_key = conf.openai_key
+elif "OPENAI_API_KEY" in os.environ:
+    openai.api_key = os.environ["OPENAI_API_KEY"]
 else:
-    openai.api_key = cfg.openai_key
+    openai.api_key = func.get_aikey()
 
 
 # Sets variables
@@ -52,7 +62,7 @@ if input_sum[0] != "skip":
 # function to modify the description, save, load etc.
 
 while True:
-    console.print(Markdown(l_p.ask_options))
+    console.print(Markdown(l_p.ask_options), style=conf.txt_style)
     options_1 = IntPrompt.ask()  
                       
     if options_1 == 1:
@@ -136,7 +146,7 @@ while True:
 
     elif options_1 == 15:
         saved_data = func.extract_data()
-        console.print(saved_data)
+#        console.print(Padding(saved_data[0], {2, 2}), style=conf.txt_style)
         the_world = saved_data[0]
         chapters = json.loads(saved_data[1])
         definitions = saved_data[2]

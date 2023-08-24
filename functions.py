@@ -64,7 +64,6 @@ def rollback(memory):
     world_number = -(world_number)
     try:
         console.print(Padding(memory[world_number], {2, 3}))
-        console.print(Padding('Do you want to make this world the primary one', {2, 3}))
         if Confirm.ask('Do you want to make this world the primary one') == True:
             return (True, memory[world_number])
         else:
@@ -76,7 +75,7 @@ def rollback(memory):
 
 def extract_data():
     console.print(Padding('What number does the file have (e.g. my_world_3.txt is number 3)?', {2, 3}))
-    file_number = IntPrompt() 
+    file_number = IntPrompt.ask() 
     app_path = os.getcwd()
     file_path = f"{app_path}\saved worlds\my_world_{file_number}.txt"
     if os.path.exists(file_path):
@@ -111,7 +110,7 @@ def save_to_file(the_world, chapters, definitions, substitutions, memory, input_
         file_path = os.path.join(subdir_path, f"my_world_{x}.txt")
     with open(file_path, "w") as f:
         f.write(saving_world)
-    console.print(Padding("Saved as: {file_path}", {2, 3}))
+    console.print(Padding(f"Saved as: {file_path}", {2, 3}))
 
 def get_aikey():
     app_path = os.getcwd()
@@ -121,8 +120,9 @@ def get_aikey():
             aikey = str(file.read())
             return aikey
     else:
-        console.print(Padding("I'm sorry but I can't find the openai api key. Please provide it\
-                      either by placing it in config.openai_key or in aikey.txt file.", {2, 3}))
+        console.print(Padding("I'm sorry but I can't find the openai api key. Please provide it by \
+                                placing it in config.openai_key, setting an envirnomental variable \
+                                or placing it in aikey.txt file in the app folder.", {2, 3}))
 
 # NOT USED
 def split_description(description, split_word, index):
