@@ -54,4 +54,5 @@ ask_options = """
 |6|Decliche|&nbsp;|&nbsp;|16|Save the world!
 |7|Darken the world|&nbsp;|&nbsp;|&nbsp;|&nbsp;|
 |8|Brighten the world|&nbsp;|&nbsp;|17|HELP!|
+
 """

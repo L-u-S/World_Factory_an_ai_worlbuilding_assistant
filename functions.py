@@ -9,20 +9,23 @@ from rich.prompt import Prompt
 from rich.prompt import IntPrompt
 from rich.prompt import Confirm
 from rich.padding import Padding
+from rich.style import Style
+
+from config import Config
 
 # SETUP
 console = Console(width=100)
-
+conf = Config()
 
 def add_input(text):
-    console.print(Padding(f'{text}', {2, 3}))
+    console.print(Padding(f'{text}', (1, 2, 2, 3)))
     added_input = Prompt.ask() 
     return added_input
 
 
 def add_inputs(text):
     inputs = []
-    console.print(Padding(f'''{text} If that's all, and you want me to start generating a response, just write: "ok":''', {2, 4}))
+    console.print(Padding(f'''{text} If that's all, and you want me to start generating a response, just write: "ok":''', (1, 2, 2, 3)), style=conf.txt_style)
     while True:
         idea_input = Prompt.ask()
         if idea_input.lower() == "ok":
@@ -42,39 +45,39 @@ def random_words(number):
 
 def printout(the_world, chapters, definitions, substitutions):
     try:
-        console.print(Padding(the_world, {2, 3}))
+        console.print(Padding(the_world, (1, 2, 2, 3)))
     except: 
         pass
     
     try:
         for key, value in chapters.items():
-            console.print(Padding(f'{key.upper()} {value}', {2, 3}))
+            console.print(Padding(f'{key.upper()} {value}', (1, 2, 2, 3)))
     except:
         pass
     
     try:
-        console.print(Padding(f'{definitions} {substitutions}', {2, 3}))
+        console.print(Padding(f'{definitions} {substitutions}', (1, 2, 2, 3)))
     except:
         pass    
 
 
 def rollback(memory):
-    console.print(Padding('How far should I roll back?', {2, 3}))
+    console.print(Padding('How far should I roll back?', (1, 2, 2, 3)))
     world_number = IntPrompt.ask()
     world_number = -(world_number)
     try:
-        console.print(Padding(memory[world_number], {2, 3}))
+        console.print(Padding(memory[world_number], (1, 2, 2, 3)))
         if Confirm.ask('Do you want to make this world the primary one') == True:
             return (True, memory[world_number])
         else:
             return (False)
     except:
-        console.print(Padding('Sorry, no such world! Try again.', {2, 3}))
+        console.print(Padding('Sorry, no such world! Try again.', (1, 2, 2, 3)))
         return (False)
 
 
 def extract_data():
-    console.print(Padding('What number does the file have (e.g. my_world_3.txt is number 3)?', {2, 3}))
+    console.print(Padding('What number does the file have (e.g. my_world_3.txt is number 3)?', (1, 2, 1, 3)))
     file_number = IntPrompt.ask() 
     app_path = os.getcwd()
     file_path = f"{app_path}\saved worlds\my_world_{file_number}.txt"
@@ -110,7 +113,7 @@ def save_to_file(the_world, chapters, definitions, substitutions, memory, input_
         file_path = os.path.join(subdir_path, f"my_world_{x}.txt")
     with open(file_path, "w") as f:
         f.write(saving_world)
-    console.print(Padding(f"Saved as: {file_path}", {2, 3}))
+    console.print(Padding(f"Saved as: {file_path}", (1, 2, 2, 3)))
 
 def get_aikey():
     app_path = os.getcwd()
@@ -122,7 +125,7 @@ def get_aikey():
     else:
         console.print(Padding("I'm sorry but I can't find the openai api key. Please provide it by \
                                 placing it in config.openai_key, setting an envirnomental variable \
-                                or placing it in aikey.txt file in the app folder.", {2, 3}))
+                                or placing it in aikey.txt file in the app folder.", (1, 2, 2, 3)))
 
 # NOT USED
 def split_description(description, split_word, index):

@@ -49,7 +49,7 @@ substitutions = ''
 
 
 # Generates the first version of the world
-console.print(Padding(l_p.starting_info, {2, 3}))
+console.print(Padding(l_p.starting_info, (1, 2, 2, 3)))
 
 input_sum = func.add_inputs('Write your ideas below! If you want to skip to the menu, write "skip".')
 
@@ -124,7 +124,8 @@ while True:
 
 
     elif options_1 == 12:
-        console.print(Padding('\n'.join(memory), {2, 3}))
+        for x in range(len(memory)):
+            console.print(Padding(f"MEMORY {len(memory) - x} \n {memory[x]}", (1, 2, 1, 3)))   # ok niby ale dziwne rzeczy się tu dzieją z kolorami
 
 
     elif options_1 == 13:
@@ -165,4 +166,5 @@ while True:
   
 
 
-
+#TODO: 1, 2, 2, 3 czy nie powinno być 1, 2, 1, 3? Jak lepiej?
+#TODO: memory print dobrze działa ale ma problem z kolorami w white theme

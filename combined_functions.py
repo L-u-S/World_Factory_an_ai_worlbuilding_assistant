@@ -50,7 +50,7 @@ You are to generate an idea for a world. Following those rules:
 def worldbuilding_func(input_sum):
     messages = [{"role": "system", "content" : worldbuilding_prompt},
                 {"role": "user", "content": '\n'.join(input_sum)}]
-    console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
+    console.print(Padding('Processing, might take a while', (1, 3)), style=red_style)
     response = openai.ChatCompletion.create(
         model=conf.chat_models[conf.model],
         messages=messages,
@@ -59,7 +59,7 @@ def worldbuilding_func(input_sum):
 
 def worldbuilding(input_sum):
     the_world = worldbuilding_func(input_sum).choices[0].message.content
-    console.print(Padding('Primary world description:\n' + the_world, {2, 3}))
+    console.print(Padding('Primary world description:\n' + the_world, (1, 2, 1, 3)))
     return the_world
 
 
@@ -79,7 +79,7 @@ def generate_content_func(the_world, chapter_input):
     messages = [{"role": "system", "content" : generate_content_prompt},
                 {"role": "user", "content": the_world},
                 {"role": "user", "content": chapter_input}]
-    console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
+    console.print(Padding('Processing, might take a while', (1, 3)), style=red_style)
     response = openai.ChatCompletion.create(
         model=conf.chat_models[conf.model],
         messages=messages,
@@ -89,7 +89,7 @@ def generate_content_func(the_world, chapter_input):
 def generate_content(the_world, chapter_input):
     new_content = generate_content_func(the_world, chapter_input).choices[0].message.content
     new_content = new_content.split('Action:')[1]
-    console.print(Padding('The new content:\n' + new_content, {2, 3}))
+    console.print(Padding('The new content:\n' + new_content, (1, 2, 2, 3)))
     return new_content
 
 
@@ -110,7 +110,7 @@ def rebalance_func(the_world, input_sum):
     messages = [{"role": "system", "content" : rebalance_prompt},
                 {"role": "user", "content": the_world},
                 {"role": "user", "content": '\n'.join(input_sum)}]
-    console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
+    console.print(Padding('Processing, might take a while', (1, 3)), style=red_style)
     response = openai.ChatCompletion.create(
         model=conf.chat_models[conf.model],
         messages=messages,
@@ -120,7 +120,7 @@ def rebalance_func(the_world, input_sum):
 def rebalance(the_world, input_sum):
     rebalanced = rebalance_func(the_world, input_sum).choices[0].message.content
     rebalanced = rebalanced.split('Action:')[1]
-    console.print(Padding('The new content:\n' + rebalanced, {2, 3}))
+    console.print(Padding('The new content:\n' + rebalanced, (1, 2, 2, 3)))
     return rebalanced
 
 
@@ -164,7 +164,7 @@ def inject_random_func(the_world, randomness):
     messages = [{"role": "system", "content" : custom_prompt},
                 {"role": "user", "content": randomness},
                 {"role": "user", "content": the_world}]
-    console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
+    console.print(Padding('Processing, might take a while', (1, 3)), style=red_style)
     response = openai.ChatCompletion.create(
         model=conf.chat_models[conf.model],
         messages=messages,
@@ -172,16 +172,16 @@ def inject_random_func(the_world, randomness):
     return response     
 
 def inject_random(the_world):
-    console.print(Padding('How many random concepts should I inject?', {2, 3}))
+    console.print(Padding('How many random concepts should I inject?', (1, 2, 1, 3)))
     random_level = IntPrompt.ask()
     randomness = func.random_words(random_level)
     random_injected_world = inject_random_func(the_world, randomness).choices[0].message.content
     definitions = random_injected_world.split('Thought:')[0]
-    console.print(Padding('The modified version:\n' + 'First some definitions that may be needed to understand it all:\n' + definitions, {1, 3}), style=conf.txt_style)
+    console.print(Padding('The modified version:\n' + 'First some definitions that may be needed to understand it all:\n' + definitions, (1, 3)), style=conf.txt_style)
     random_injected_world_ideas = random_injected_world.split('Writing:')[1].split('Second thought:')[0]
-    console.print(Padding(random_injected_world_ideas, {1, 3}))
+    console.print(Padding(random_injected_world_ideas, (1, 3)))
     substitutions = random_injected_world.split('Action:')[1]
-    console.print(Padding('You might consider to:\n' + substitutions, {1, 3}), style=conf.txt_style)
+    console.print(Padding('You might consider to:\n' + substitutions, (1, 3)), style=conf.txt_style)
     return definitions, random_injected_world_ideas, substitutions 
 
 
@@ -193,7 +193,7 @@ def inject_non_random(the_world, concept_sum):
     concept_sum = ', '.join(concept_sum)
     non_random_injected_world = inject_random_func(the_world, concept_sum).choices[0].message.content
     non_random_injected_world = non_random_injected_world.split('Writing:')[1].split('Second thought:')[0]
-    console.print(Padding('Modified version:\n' + non_random_injected_world, {2, 3}))
+    console.print(Padding('Modified version:\n' + non_random_injected_world, (1, 2, 2, 3)))
     return non_random_injected_world
 
 
@@ -228,7 +228,7 @@ def decliche_func(the_world):
         custom_prompt = decliche_prompt
     messages = [{"role": "system", "content" : custom_prompt},
                 {"role": "user", "content": the_world}]
-    console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
+    console.print(Padding('Processing, might take a while', (1, 3)), style=red_style)
     response = openai.ChatCompletion.create(
         model=conf.chat_models[conf.model],
         messages=messages,
@@ -238,7 +238,7 @@ def decliche_func(the_world):
 def decliche(the_world):
     decliched_world = decliche_func(the_world).choices[0].message.content
     decliched_world = decliched_world.split('Action:')[1]
-    console.print(Padding('Decliched content:\n' + decliched_world, {2, 3}))
+    console.print(Padding('Decliched content:\n' + decliched_world, (1, 2, 2, 3)))
     return decliched_world
 
 
@@ -265,7 +265,7 @@ def far_out_world_func(the_world, randomness):
     messages = [{"role": "system", "content" : far_out_world_prompt},
                 {"role": "user", "content": randomness},
                 {"role": "user", "content": the_world}]
-    console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
+    console.print(Padding('Processing, might take a while', (1, 3)), style=red_style)
     response = openai.ChatCompletion.create(
         model=conf.chat_models[conf.model],
         messages=messages,
@@ -273,16 +273,16 @@ def far_out_world_func(the_world, randomness):
     return response     
 
 def far_out_world(the_world):
-    console.print(Padding('How many random concepts should I inject?', {2, 3}))
+    console.print(Padding('How many random concepts should I inject?', (1, 2, 1, 3)))
     random_level = IntPrompt.ask()
     randomness = func.random_words(random_level)
     odder_world = far_out_world_func(the_world, randomness).choices[0].message.content
     definitions = odder_world.split('Definitions:')[1].split('Thought:')[0]
-    console.print(Padding('The odder version:\n' + 'First some definitions that may be needed to understand it all:\n' + definitions, {1, 3}))
+    console.print(Padding('The odder version:\n' + 'First some definitions that may be needed to understand it all:\n' + definitions, (1, 3)))
     odder_world_ideas = odder_world.split('Writing:')[1].split('Second thought:')[0]
-    console.print(Padding(odder_world_ideas, {1, 3}))
+    console.print(Padding(odder_world_ideas, (1, 3)))
     substitutions = odder_world.split('Action:')[1]
-    console.print(Padding('You might consider to:' + substitutions, {1, 3}))
+    console.print(Padding('You might consider to:' + substitutions, (1, 3)))
     return definitions, odder_world_ideas, substitutions
 
 
@@ -305,7 +305,7 @@ Action: output a shirtened world description using at least as many tokens as th
 def defluff_func(the_world):
     messages = [{"role": "system", "content" : defluff_prompt},
                 {"role": "user", "content": the_world}]
-    console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
+    console.print(Padding('Processing, might take a while', (1, 3)), style=red_style)
     response = openai.ChatCompletion.create(
         model=conf.chat_models[conf.model],
         messages=messages,
@@ -323,7 +323,7 @@ def defluff(the_world):
     elif 'tokens' in defluffed_world:
         defluffed_world = defluffed_world.split('tokens')[1]
         
-    console.print(Padding('Defluffed description:\n' + defluffed_world, {2, 3}))
+    console.print(Padding('Defluffed description:\n' + defluffed_world, (1, 2, 2, 3)))
     return defluffed_world
     
 
@@ -343,7 +343,7 @@ Action: rewrite the description in a way that will be significantly more dangero
 def darken_world_func(the_world):
     messages = [{"role": "system", "content" : darkened_world_prompt},
                 {"role": "user", "content": the_world}]
-    console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
+    console.print(Padding('Processing, might take a while', (1, 3)), style=red_style)
     response = openai.ChatCompletion.create(
         model=conf.chat_models[conf.model],
         messages=messages,
@@ -353,7 +353,7 @@ def darken_world_func(the_world):
 def darken_world(the_world):
     darker_world = darken_world_func(the_world).choices[0].message.content
     darker_world = darker_world.split('Action:')[1]
-    console.print(Padding('The darker version:\n' + darker_world, {2, 3}))
+    console.print(Padding('The darker version:\n' + darker_world, (1, 2, 2, 3)))
     return darker_world
 
 
@@ -371,7 +371,7 @@ Action: rewrite the description in a way that will be significantly more light-h
 def lighten_world_func(the_world):
     messages = [{"role": "system", "content" : lightened_world_prompt},
                 {"role": "user", "content": the_world}]
-    console.print(Padding('Processing, might take a while', {1, 3}), style=red_style)
+    console.print(Padding('Processing, might take a while', (1, 3)), style=red_style)
     response = openai.ChatCompletion.create(
         model=conf.chat_models[conf.model],
         messages=messages,
@@ -381,6 +381,6 @@ def lighten_world_func(the_world):
 def lighten_world(the_world):
     lighter_world = lighten_world_func(the_world).choices[0].message.content
     lighter_world = lighter_world.split('Action:')[1]
-    console.print(Padding('The lighter version:\n' + lighter_world, {2, 3}))
+    console.print(Padding('The lighter version:\n' + lighter_world, (1, 2, 2, 3)))
     return lighter_world
 

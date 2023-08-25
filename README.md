@@ -23,7 +23,7 @@ more interesting.
 
 ---
 First, the user writes about his or her ideas about the world, then ChatGTP generates the first 
-draft of the world's description. It can look like that:
+draft of the world's description. It looks like this:
 
 &nbsp;
 
@@ -42,7 +42,8 @@ Then the outline can be "mutated" using several commands:
 
 The main actions that can be used are based around "injecting" concepts into the description.
 
-The concepts can be random (random words are downloaded from https://random-word-api.herokuapp.com/
+Those concepts can be random (random words are downloaded from https://random-word-api.herokuapp.
+com/
 and then ChatGTP is instructed to rewrite the description of the world using them as inspiration) 
 or defined by the user. 
 
@@ -79,7 +80,7 @@ The whole app is run in terminal, using Rich to prettify the results.
 All the ai-facing functions are in the combined_functions.py - most of the work on the app was 
 spent on getting the prompts (kind of) right. 
 
-This app needs an openai api key. It can be set as envirnomental variable, placed in config.py 
+This app needs an openai api key. It can be set as an environmental variable, placed in config.py 
 as self.openai_key or put into aikey.txt file that has to be placed in the app folder.
 
 I placed an exe version of the file on github, this version needs aikey.txt in order to work. 
@@ -88,6 +89,7 @@ I placed an exe version of the file on github, this version needs aikey.txt in o
 ## The commands
 
 ---
+&nbsp;
 
 |Actions|What do they do?|
 |---|---|
@@ -119,4 +121,5 @@ I think there are several more things to do:
 - Adding picture generation
 - Adding option for mutating chapters in line with the general description
 - Trying the same on Llama-based LLMs (maybe they are more creative?)
+- Can we actually induce LLMs to hallucinate more? It could help.
 

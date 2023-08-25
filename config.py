@@ -9,5 +9,5 @@ class Config():
         self.model = 0
         
         # UI PARAMETERS
-        self.black_on_white_style = True
+        self.black_on_white_style = False
         self.txt_style = Style()
