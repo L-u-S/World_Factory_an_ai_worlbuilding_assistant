@@ -117,9 +117,11 @@ I placed an exe version of the file on github, this version needs aikey.txt in o
 ---
 I think there are several more things to do:
 
-- General debugging and prettyfing
+- General debugging and prettifying
 - Adding picture generation
 - Adding option for mutating chapters in line with the general description
 - Trying the same on Llama-based LLMs (maybe they are more creative?)
 - Can we actually induce LLMs to hallucinate more? It could help.
+- How would this work on other types of texts? Can it make them more engaging? In theory ALL texts 
+  could be rewritten according to users preferences.
 
