@@ -1,6 +1,7 @@
 import openai
 import json
 import os
+import sys
 
 from rich import print
 from rich.console import Console
@@ -25,7 +26,7 @@ console = Console(width=100)
 
 # UI SETUP
 if conf.black_on_white_style == True:
-    os.system('color f0')
+    os.system('color F0')
     b_o_w = Style(color="black", bgcolor="bright_white")
     conf.txt_style = b_o_w
 
@@ -49,7 +50,7 @@ substitutions = ''
 
 
 # Generates the first version of the world
-console.print(Padding(l_p.starting_info, (1, 2, 2, 3)))
+console.print(Padding(l_p.starting_info, (1, 2, 1, 3)))
 
 input_sum = func.add_inputs('Write your ideas below! If you want to skip to the menu, write "skip".')
 
@@ -129,12 +130,15 @@ while True:
 
 
     elif options_1 == 13:
-        if Confirm.ask('Should I clear definitions and substitutions') == True:
+        console.print(Padding('Should I clear definitions and substitutions', (1, 2, 1, 3)))
+        if Confirm.ask() == True:
             definitions = ''
             substitutions = ''
-        if Confirm.ask('Should I clear chapters, yes/no?') == True:
+        console.print(Padding('Should I clear chapters?', (1, 2, 1, 3)))
+        if Confirm.ask() == True:
             chapters = {}
-        if Confirm.ask('Should I clear memory, yes/no?') == True:
+        console.print(Padding('Should I clear memory?', (1, 2, 1, 3)))
+        if Confirm.ask() == True:
             memory = []
 
 
@@ -147,7 +151,6 @@ while True:
 
     elif options_1 == 15:
         saved_data = func.extract_data()
-#        console.print(Padding(saved_data[0], {2, 2}), style=conf.txt_style)
         the_world = saved_data[0]
         chapters = json.loads(saved_data[1])
         definitions = saved_data[2]
@@ -162,6 +165,7 @@ while True:
     
     elif options_1 == 17:
         console.print(Markdown(l_p.commands_info))
+
         
   
 

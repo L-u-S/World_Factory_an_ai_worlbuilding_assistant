@@ -1,7 +1,7 @@
 # This is information for players, most of it in markdown.
 
 starting_info = '''Hello! Welcome to the worldbuilding module. My purpose is to assist you in creating a description of an imaginary world. 
-First I would like you to provide me with some ideas concerning the world we will create.'''
+First I would like you to give me with some ideas.'''
 
 commands_info = '''
 |Actions|What do they do?|
