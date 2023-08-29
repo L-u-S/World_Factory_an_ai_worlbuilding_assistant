@@ -11,6 +11,7 @@ from rich.prompt import IntPrompt
 from rich.prompt import Confirm
 from rich.padding import Padding
 from rich.style import Style
+from rich.markup import escape
 
 
 import combined_functions as c_f
@@ -27,8 +28,11 @@ console = Console(width=100)
 # UI SETUP
 if conf.black_on_white_style == True:
     os.system('color F0')
-    b_o_w = Style(color="black", bgcolor="bright_white")
-    conf.txt_style = b_o_w
+    style_used = conf.style_types['bow']
+
+else:
+    style_used = conf.style_types['default']
+
 
 
 # Gets openai api key from config, envirnoment or file (aikey.txt)
@@ -38,6 +42,7 @@ elif "OPENAI_API_KEY" in os.environ:
     openai.api_key = os.environ["OPENAI_API_KEY"]
 else:
     openai.api_key = func.get_aikey()
+
 
 
 # Sets variables
@@ -50,7 +55,7 @@ substitutions = ''
 
 
 # Generates the first version of the world
-console.print(Padding(l_p.starting_info, (1, 2, 1, 3)))
+console.print(Padding(l_p.starting_info, (1, 2, 1, 3)), style=style_used)
 
 input_sum = func.add_inputs('Write your ideas below! If you want to skip to the menu, write "skip".')
 
@@ -58,12 +63,13 @@ if input_sum[0] != "skip":
     the_world = c_f.worldbuilding(input_sum)
     
 
+
 # Main Loop
 # Let's you select one of the worldbuilding options, then calls a 
 # function to modify the description, save, load etc.
 
 while True:
-    console.print(Markdown(l_p.ask_options), style=conf.txt_style)
+    console.print(Markdown(l_p.ask_options), style=style_used)
     options_1 = IntPrompt.ask()  
                       
     if options_1 == 1:
@@ -126,18 +132,18 @@ while True:
 
     elif options_1 == 12:
         for x in range(len(memory)):
-            console.print(Padding(f"MEMORY {len(memory) - x} \n {memory[x]}", (1, 2, 1, 3)))   # ok niby ale dziwne rzeczy się tu dzieją z kolorami
+            console.print(Padding(f"MEMORY {len(memory) - x} \n {memory[x]}", (1, 2, 1, 3)), style=style_used)   
 
 
     elif options_1 == 13:
-        console.print(Padding('Should I clear definitions and substitutions', (1, 2, 1, 3)))
+        console.print(Padding('Should I clear definitions and substitutions', (1, 2, 1, 3)), style=style_used)
         if Confirm.ask() == True:
             definitions = ''
             substitutions = ''
-        console.print(Padding('Should I clear chapters?', (1, 2, 1, 3)))
+        console.print(Padding('Should I clear chapters?', (1, 2, 1, 3)), style=style_used)
         if Confirm.ask() == True:
             chapters = {}
-        console.print(Padding('Should I clear memory?', (1, 2, 1, 3)))
+        console.print(Padding('Should I clear memory?', (1, 2, 1, 3)), style=style_used)
         if Confirm.ask() == True:
             memory = []
 
@@ -151,12 +157,13 @@ while True:
 
     elif options_1 == 15:
         saved_data = func.extract_data()
-        the_world = saved_data[0]
-        chapters = json.loads(saved_data[1])
-        definitions = saved_data[2]
-        substitutions = saved_data[3]
-        memory = json.loads(saved_data[4])
-        input_sum = json.loads(saved_data[5])
+        if saved_data != False:
+            the_world = saved_data[0]
+            chapters = json.loads(saved_data[1])
+            definitions = saved_data[2]
+            substitutions = saved_data[3]
+            memory = json.loads(saved_data[4])
+            input_sum = json.loads(saved_data[5])
 
 
     elif options_1 == 16:
@@ -170,5 +177,5 @@ while True:
   
 
 
-#TODO: 1, 2, 2, 3 czy nie powinno być 1, 2, 1, 3? Jak lepiej?
-#TODO: memory print dobrze działa ale ma problem z kolorami w white theme
+#TODO: wpakuj style do WSZYSTKICH print i sprawdź czy wszystko działa 
+# TODO: sprawdź czy defluff i rebalance dalej nie wyrzucają części promptu

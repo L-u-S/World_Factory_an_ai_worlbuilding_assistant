@@ -1,4 +1,5 @@
 import openai
+import os
 
 from rich import print
 from rich.console import Console
@@ -12,6 +13,7 @@ from rich.style import Style
 
 from config import Config
 import functions as func
+
 
 
 '''This file contains all the functions that send user commands, inputs etc to ChatGTP.
@@ -33,6 +35,14 @@ import functions as func
 conf = Config()
 console = Console(width=100)
 red_style = Style(color="red", bold=True)
+
+# UI SETUP
+if conf.black_on_white_style == True:
+    os.system('color F0')
+    style_used = conf.style_types['bow']
+
+else:
+    style_used = conf.style_types['default']
 
 
 
@@ -59,7 +69,7 @@ def worldbuilding_func(input_sum):
     """ 
     messages = [{"role": "system", "content" : worldbuilding_prompt},
                 {"role": "user", "content": '\n'.join(input_sum)}]
-    console.print(Padding('[blink]Processing, might take a while', (1, 3)), style=red_style)
+    console.print(Padding('Processing, might take a while', (1, 3)), style=red_style)
     response = openai.ChatCompletion.create(
         model=conf.chat_models[conf.model],
         messages=messages,
@@ -75,7 +85,7 @@ def worldbuilding(input_sum):
     :return: text from llm response as string
     """ 
     the_world = worldbuilding_func(input_sum).choices[0].message.content
-    console.print(Padding('Primary world description:\n' + the_world, (1, 2, 1, 3)))
+    console.print(Padding('Primary world description:\n' + the_world, (1, 2, 1, 3)), style=style_used)
     return the_world
 
 
@@ -123,7 +133,7 @@ def generate_content(the_world, chapter_input):
     """ 
     new_content = generate_content_func(the_world, chapter_input).choices[0].message.content
     new_content = new_content.split('Action:')[1]
-    console.print(Padding('The new content:\n' + new_content, (1, 2, 1, 3)))
+    console.print(Padding('The new content:\n' + new_content, (1, 2, 1, 3)), style=style_used)
     return new_content
 
 
@@ -170,7 +180,7 @@ def rebalance(the_world, input_sum):
     """
     rebalanced = rebalance_func(the_world, input_sum).choices[0].message.content
     rebalanced = rebalanced.split('Action:')[1]
-    console.print(Padding('The new content:\n' + rebalanced, (1, 2, 1, 3)))
+    console.print(Padding('The new content:\n' + rebalanced, (1, 2, 1, 3)), style=style_used)
     return rebalanced
 
 
@@ -242,16 +252,16 @@ def inject_random(the_world):
     :param the_world: the description of the world as a string
     :return: texts from llm response as strings
     """
-    console.print(Padding('How many random concepts should I inject?', (1, 2, 1, 3)))
+    console.print(Padding('How many random concepts should I inject?', (1, 2, 1, 3)), style=style_used)
     random_level = IntPrompt.ask()
     randomness = func.random_words(random_level)
     random_injected_world = inject_random_func(the_world, randomness).choices[0].message.content
     definitions = random_injected_world.split('Thought:')[0]
-    console.print(Padding('The modified version:\n' + 'First some definitions that may be needed to understand it all:\n' + definitions, (1, 3)), style=conf.txt_style)
+    console.print(Padding('The modified version:\n' + 'First some definitions that may be needed to understand it all:\n' + definitions, (1, 3)), style=style_used)
     random_injected_world_ideas = random_injected_world.split('Writing:')[1].split('Second thought:')[0]
-    console.print(Padding(random_injected_world_ideas, (1, 2, 1, 3)))
+    console.print(Padding(random_injected_world_ideas, (1, 2, 1, 3)), style=style_used)
     substitutions = random_injected_world.split('Action:')[1]
-    console.print(Padding('You might consider to:\n' + substitutions, (1, 3)), style=conf.txt_style)
+    console.print(Padding('You might consider to:\n' + substitutions, (1, 3)), style=style_used)
     return definitions, random_injected_world_ideas, substitutions 
 
 
@@ -272,7 +282,7 @@ def inject_non_random(the_world, concept_sum):
     concept_sum = ', '.join(concept_sum)
     non_random_injected_world = inject_random_func(the_world, concept_sum).choices[0].message.content
     non_random_injected_world = non_random_injected_world.split('Writing:')[1].split('Second thought:')[0]
-    console.print(Padding('Modified version:\n' + non_random_injected_world, (1, 2, 1, 3)))
+    console.print(Padding('Modified version:\n' + non_random_injected_world, (1, 2, 1, 3)), style=style_used)
     return non_random_injected_world
 
 
@@ -333,7 +343,7 @@ def decliche(the_world):
     """
     decliched_world = decliche_func(the_world).choices[0].message.content
     decliched_world = decliched_world.split('Action:')[1]
-    console.print(Padding('Decliched content:\n' + decliched_world, (1, 2, 1, 3)))
+    console.print(Padding('Decliched content:\n' + decliched_world, (1, 2, 1, 3)), style=style_used)
     return decliched_world
 
 
@@ -388,16 +398,16 @@ def far_out_world(the_world):
     :param the_world: the description of the world as a string
     :return: texts from llm response as strings
     """
-    console.print(Padding('How many random concepts should I inject?', (1, 2, 1, 3)))
+    console.print(Padding('How many random concepts should I inject?', (1, 2, 1, 3)), style=style_used)
     random_level = IntPrompt.ask()
     randomness = func.random_words(random_level)
     odder_world = far_out_world_func(the_world, randomness).choices[0].message.content
     definitions = odder_world.split('Definitions:')[1].split('Thought:')[0]
-    console.print(Padding('The odder version:\n' + 'First some definitions that may be needed to understand it all:\n' + definitions, (1, 3)))
+    console.print(Padding('The odder version:\n' + 'First some definitions that may be needed to understand it all:\n' + definitions, (1, 3)), style=style_used)
     odder_world_ideas = odder_world.split('Writing:')[1].split('Second thought:')[0]
-    console.print(Padding(odder_world_ideas, (1, 2, 1, 3)))
+    console.print(Padding(odder_world_ideas, (1, 2, 1, 3)), style=style_used)
     substitutions = odder_world.split('Action:')[1]
-    console.print(Padding('You might consider to:' + substitutions, (1, 2, 1, 3)))
+    console.print(Padding('You might consider to:' + substitutions, (1, 2, 1, 3)), style=style_used)
     return definitions, odder_world_ideas, substitutions
 
 
@@ -452,7 +462,7 @@ def defluff(the_world):
     elif 'tokens' in defluffed_world:
         defluffed_world = defluffed_world.split('tokens')[1]
         
-    console.print(Padding('Defluffed description:\n' + defluffed_world, (1, 2, 1, 3)))
+    console.print(Padding('Defluffed description:\n' + defluffed_world, (1, 2, 1, 3)), style=style_used)
     return defluffed_world
     
 
@@ -496,7 +506,7 @@ def darken_world(the_world):
     """
     darker_world = darken_world_func(the_world).choices[0].message.content
     darker_world = darker_world.split('Action:')[1]
-    console.print(Padding('The darker version:\n' + darker_world, (1, 2, 1, 3)))
+    console.print(Padding('The darker version:\n' + darker_world, (1, 2, 1, 3)), style=style_used)
     return darker_world
 
 
@@ -538,6 +548,6 @@ def lighten_world(the_world):
     """
     lighter_world = lighten_world_func(the_world).choices[0].message.content
     lighter_world = lighter_world.split('Action:')[1]
-    console.print(Padding('The lighter version:\n' + lighter_world, (1, 2, 1, 3)))
+    console.print(Padding('The lighter version:\n' + lighter_world, (1, 2, 1, 3)), style=style_used)
     return lighter_world
 
