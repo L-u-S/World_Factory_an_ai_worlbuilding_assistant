@@ -20,8 +20,25 @@ from config import Config
 console = Console(width=100)
 conf = Config()
 
+
 # UI SETUP
-if conf.black_on_white_style == True:
+def get_style():
+    app_path = os.getcwd()
+    file_path = f"{app_path}/bow_style.txt"
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as file:
+            bow_style = str(file.read())
+            if bow_style.lower() == "true":
+                style_bool = True
+            else:
+                style_bool = False
+            return style_bool
+    else:
+        return False
+
+style_bool = get_style()
+
+if conf.black_on_white_style == True or style_bool == True:
     os.system('color F0')
     style_used = conf.style_types['bow']
 
@@ -31,7 +48,7 @@ else:
 
 
 def add_input(text):
-    console.print(Padding(f'{text}', (1, 2, 1, 3)))
+    console.print(Padding(f'{text}', (1, 2, 1, 3)), style=style_used)
     added_input = Prompt.ask() 
     return added_input
 
@@ -40,7 +57,6 @@ def add_input(text):
 def add_inputs(text):
     inputs = []
     console.print(Padding(f'''{text} If that's all, and you want me to start generating a response, write: "ok":''', (1, 2, 1, 3)), style=style_used)
-#   console.print(Padding(f'''{text} If that's all, and you want me to start generating a response, write: "ok":''', (1, 2, 1, 3)), style=conf.txt_style)
     while True:
         idea_input = Prompt.ask()
         if idea_input.lower() == "ok":
@@ -79,12 +95,13 @@ def printout(the_world, chapters, definitions, substitutions):
 
 
 def rollback(memory):
-    console.print(Padding('How far should I roll back?', (1, 2, 1, 3)))
+    console.print(Padding('How far should I roll back?', (1, 2, 1, 3)), style=style_used)
     world_number = IntPrompt.ask()
     world_number = -(world_number)
     try:
-        console.print(Padding(memory[world_number], (1, 2, 1, 3)))
-        if Confirm.ask('Do you want to make this world the primary one') == True:
+        console.print(Padding(memory[world_number], (1, 2, 1, 3)), style=style_used)
+        console.print(Padding('Do you want to make this world the primary one', (1, 2, 1, 3)), style=style_used)
+        if Confirm.ask() == True:
             return (True, memory[world_number])
         else:
             return (False, '')
@@ -148,9 +165,12 @@ def get_aikey():
     else:
         console.print(Padding("I'm sorry but I can't find the openai api key. Please provide it by \
                                 placing it in config.openai_key, setting an envirnomental variable \
-                                or placing it in aikey.txt file in the app folder.", (1, 2, 1, 3)))
+                                or placing it in aikey.txt file in the app folder.", (1, 2, 1, 3)), 
+                                style=style_used)
 
 
+
+    
 
 # NOT USED
 def split_description(description, split_word, index):
@@ -158,5 +178,8 @@ def split_description(description, split_word, index):
         output = description.split(split_word)[index]
         return output
     except:
-        console.print("\n\n Something went wrong! Returning whole content. If it's bad don't save it!\n")
+        console.print(Padding("Something went wrong! Returning whole content. If it's bad don't save it!", (1, 2, 1, 3)), style=style_used)
         return description
+
+
+

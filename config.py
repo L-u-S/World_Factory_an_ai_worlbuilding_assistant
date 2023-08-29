@@ -11,7 +11,7 @@ class Config():
         self.model = 0
 
         # UI PARAMETERS
-        self.black_on_white_style = True
+        self.black_on_white_style = False
         self.style_types = {
         'default' : Style(),
         'bow' : Style(color="black", bgcolor="bright_white")

@@ -36,8 +36,11 @@ conf = Config()
 console = Console(width=100)
 red_style = Style(color="red", bold=True)
 
+
 # UI SETUP
-if conf.black_on_white_style == True:
+style_bool = func.get_style()
+
+if conf.black_on_white_style == True or style_bool == True:
     os.system('color F0')
     style_used = conf.style_types['bow']
 
@@ -227,7 +230,8 @@ def inject_random_func(the_world, randomness):
     random-word-api.herokuapp.com)
     :return: llm response
     """
-    if Confirm.ask('\nShould we use aggresive injecting (more likely to change the natury of the world instead of just the description)?\n') == True:
+    console.print(Padding('Should we use aggresive injecting (more likely to change the natury of the world instead of just the description)?', (1, 2, 1, 3)), style=style_used)
+    if Confirm.ask() == True:
         custom_prompt = aggressive_inject_random_prompt
     else:
         custom_prompt = inject_random_prompt
@@ -318,8 +322,8 @@ def decliche_func(the_world):
     :param the_world: the description of the world as a string
     :return: llm response
     """
-    if Confirm.ask('\nShould we use aggresive decliching (more likely to make the world dramatically \
-                different and rather strange)?') == True:
+    console.print(Padding('Should we use aggresive decliching (more likely to make the world dramatically different and rather strange)?', (1, 2, 1, 3)), style=style_used)
+    if Confirm.ask() == True:
         custom_prompt = aggressive_decliche_prompt
     else:
         custom_prompt = decliche_prompt

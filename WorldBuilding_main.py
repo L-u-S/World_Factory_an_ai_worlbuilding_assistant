@@ -26,7 +26,9 @@ conf = Config()
 console = Console(width=100)
 
 # UI SETUP
-if conf.black_on_white_style == True:
+style_bool = func.get_style()
+
+if conf.black_on_white_style == True or style_bool == True:
     os.system('color F0')
     style_used = conf.style_types['bow']
 
@@ -111,8 +113,9 @@ while True:
         elif options_1 == 9:
             modified_world = c_f.defluff(the_world)
 
-
-        if Confirm.ask('Do you want to keep the changes?') == True:
+        
+        console.print(Padding('Do you want to keep the changes?', (1, 2, 1, 3)), style=style_used)
+        if Confirm.ask() == True:
             memory.append(the_world)
             the_world = modified_world
         else:
@@ -122,7 +125,8 @@ while True:
     elif options_1 == 10:
         chapter_input = func.add_input("What is the chapter about?")
         new_content = c_f.generate_content(the_world, chapter_input)
-        if Confirm.ask('Do you want to keep the generated content as a chapter?') == True:
+        console.print(Padding('Do you want to keep the generated content as a chapter?', (1, 2, 1, 3)), style=style_used)
+        if Confirm.ask() == True:
             chapters[chapter_input] = new_content
 
 
@@ -171,11 +175,15 @@ while True:
 
     
     elif options_1 == 17:
-        console.print(Markdown(l_p.commands_info))
+        console.print(Markdown(l_p.commands_info), style=style_used)
+        
+    elif options_1 == 20:
+        conf.black_on_white_style = -(conf.black_on_white_style)
 
         
   
 
 
-#TODO: wpakuj style do WSZYSTKICH print i sprawdź czy wszystko działa 
-# TODO: sprawdź czy defluff i rebalance dalej nie wyrzucają części promptu
+# TODO: rebalance wyrzuca część promptu
+# TODO: spinnery mają zły background
+# TODO: some docs
