@@ -2,7 +2,7 @@
 aikey.txt
 
 # save files
-saved world/
+saved worlds/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
