@@ -1,4 +1,4 @@
-# AI Create Worlds
+# World Factory: an ai worlbuilding assistant
 
 ---
 This is a small project aiming to coax ChatGTP into being more creative when describing imagined 
@@ -11,11 +11,11 @@ worlds.
 The original aim of this project was to build a framework for cooperative worldbuilding, where 
 several users interact with ChatGTP and create a shared world that can be used in tabletop rpgs.  
 
-The main problem was that the AI generated content is just not very ... good. AIs are, by nature 
-and design, trained to be consistent rather than original / creative.
+The main problem was that the AI generated content is just not very ... good. AIs are trained 
+to be consistent rather than original / creative.
 
-In this project I tried to use several strategies to make the worlds ChatGTP can dream about, 
-more interesting.
+In this project I tried to use several strategies to make the worlds ChatGTP creates more 
+interesting.
  
 
 
@@ -31,7 +31,7 @@ draft of the world's description. It looks like this:
 
 &nbsp;
 
-Then the outline can be "mutated" using several commands:
+Then the text can be "mutated" using several commands:
 
 &nbsp;
 
@@ -43,9 +43,8 @@ Then the outline can be "mutated" using several commands:
 The main actions that can be used are based around "injecting" concepts into the description.
 
 Those concepts can be random (random words are downloaded from https://random-word-api.herokuapp.
-com/
-and then ChatGTP is instructed to rewrite the description of the world using them as inspiration) 
-or defined by the user. 
+com/) or defined by the user. After getting them ChatGTP is instructed to rewrite the 
+description of the world using the concepts as inspiration.
 
 
 The effects are usually quite wild and unpredictable, so there are several other commands that 
@@ -75,7 +74,7 @@ interesting ideas can be (automatically) generated.
 ---
 There is not much of it.
 
-The whole app is run in terminal, using Rich to prettify the results. 
+The whole app is run in terminal, using Rich to prettyprint the results. 
 
 All the ai-facing functions are in the combined_functions.py - most of the work on the app was 
 spent on getting the prompts (kind of) right. 
@@ -107,8 +106,8 @@ I placed an exe version of the file on github, this version needs aikey.txt in o
 |12. Display memory| Displays all the versions of the world that have been created in the current session.
 |13. Clear data| Deletes current session data, including chapters, word definitions, and memory.
 |14. Load world from memory| Replaces the current world description with a version from memory.
-|15. Load world from file| Imports a saved world description from a file.
-|16. Save the world!| Saves the world description, along with chapters, definitions, substitutions, and memory, to a text file on your computer.
+|15. Load world from file| Imports a saved world description from a file. The files are in the app folder/data and they are numbered. The app will ask you about the number of the file you want to load.
+|16. Save the world!| Saves the world description, along with chapters, definitions, substitutions, and memory, to a text file in app folder/data.
 |17. HELP!|Helps.
 
 
@@ -117,11 +116,10 @@ I placed an exe version of the file on github, this version needs aikey.txt in o
 ---
 I think there are several more things to do:
 
-- General debugging and prettifying
+- General debugging
 - Adding picture generation
 - Adding option for mutating chapters in line with the general description
 - Trying the same on Llama-based LLMs (maybe they are more creative?)
-- Can we actually induce LLMs to hallucinate more? It could help.
-- How would this work on other types of texts? Can it make them more engaging? In theory ALL texts 
-  could be rewritten according to users preferences.
+- Is it possible to induce LLMs to hallucinate more? It could help.
+
 

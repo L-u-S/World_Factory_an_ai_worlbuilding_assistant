@@ -1,6 +1,9 @@
 # openai key file
 aikey.txt
 
+# save files
+saved world/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
