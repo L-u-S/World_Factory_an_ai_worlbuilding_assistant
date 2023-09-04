@@ -179,11 +179,3 @@ while True:
         
     elif options_1 == 20:
         conf.black_on_white_style = -(conf.black_on_white_style)
-
-        
-  
-
-
-# TODO: rebalance wyrzuca część promptu
-# TODO: spinnery mają zły background
-# TODO: some docs

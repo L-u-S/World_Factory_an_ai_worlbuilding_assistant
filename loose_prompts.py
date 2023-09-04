@@ -34,9 +34,9 @@ commands_info = '''
 |&nbsp;|&nbsp;|
 |14. Load world from memory| Replaces the current world description with a version from memory.
 |&nbsp;|&nbsp;|
-|15. Load world from file| Imports a saved world description from a file.
+|15. Load world from file| Imports a saved world description from a file. The files are in the app folder/data and they are numbered. The app will ask you about the number of the file you want to load.
 |&nbsp;|&nbsp;|
-|16. Save the world!| Saves the world description, along with chapters, definitions, substitutions, and memory, to a text file on your computer.
+|16. Save the world!| Saves the world description, along with chapters, definitions, substitutions, and memory, to a text file in app folder/data.
 |&nbsp;|&nbsp;|
 |17. HELP!|It helps.
 '''
