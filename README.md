@@ -1,6 +1,6 @@
 # World Factory: an ai worlbuilding assistant
 
----
+
 This is a small project aiming to coax ChatGTP into being more creative when describing imagined 
 worlds.
 
@@ -42,8 +42,7 @@ Then the text can be "mutated" using several commands:
 
 The main actions that can be used are based around "injecting" concepts into the description.
 
-Those concepts can be random (random words are downloaded from https://random-word-api.herokuapp.
-com/) or defined by the user. After getting them ChatGTP is instructed to rewrite the 
+Those concepts can be random (random words are downloaded from https://random-word-api.herokuapp.com/) or defined by the user. After getting them ChatGTP is instructed to rewrite the 
 description of the world using the concepts as inspiration.
 
 
