@@ -7,7 +7,7 @@ worlds.
 
 ## What is the idea?
 
----
+
 The original aim of this project was to build a framework for cooperative worldbuilding, where 
 several users interact with ChatGTP and create a shared world that can be used in tabletop rpgs.  
 
@@ -21,7 +21,7 @@ interesting.
 
 ## How does it work?
 
----
+
 First, the user writes about his or her ideas about the world, then ChatGTP generates the first 
 draft of the world's description. It looks like this:
 
@@ -71,7 +71,7 @@ interesting ideas can be (automatically) generated.
 
 ## The technical stuff
 
----
+
 There is not much of it.
 
 The whole app is run in terminal, using Rich to prettyprint the results. 
@@ -87,7 +87,7 @@ I placed an exe version of the file on github, this version needs aikey.txt in o
 
 ## The commands
 
----
+
 &nbsp;
 
 |Actions|What do they do?|
@@ -113,7 +113,7 @@ I placed an exe version of the file on github, this version needs aikey.txt in o
 
 ## TODO:
 
----
+
 I think there are several more things to do:
 
 - General debugging
