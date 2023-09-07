@@ -68,6 +68,26 @@ As you can see it can get quite odd, but at least, from time to time, some
 interesting ideas can be (automatically) generated.  
 
 
+## Using the .exe
+
+The .exe file needs some additional files to work. 
+
+The first is aikey.txt - it should be placed in the same folder as the .exe. 
+
+Paste your openai api key into the file and save it. 
+
+The second (optional) file is bow_style.txt. It should be placed in the same folder as the exe.
+
+If the content of the file says 'True' the app will start in black-on-white style, otherwise it
+will look as a normal (white on black) terminal window. 
+
+So your folder and the inside of the files should look like that (that's not a real key btw):
+
+&nbsp;
+
+![screen_4.jpg](img%2Fscreen_4.jpg)
+
+
 ## The technical stuff
 
 
